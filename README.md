@@ -3,7 +3,7 @@
 > * a Go testing framework that generates test audio files and ease testing of audio cli tools
 > * [a colloidal extract of algae; used especially in culture media](https://en.wikipedia.org/wiki/Agar)
 
-![logo.jpg](logo.jpg)
+![Agar](logo.jpg)
 
 ## Purpose
 

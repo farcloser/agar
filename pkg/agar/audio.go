@@ -325,6 +325,31 @@ func ChannelImbalanceLeft(data test.Data, helpers test.Helpers) string {
 	})
 }
 
+// NoiseFloorHigh returns path to audio with elevated noise floor (white noise).
+// White noise has flat spectrum, so 14-18 kHz band is at the same level as 1-10 kHz → NoiseFloorDb ≈ 0.
+func NoiseFloorHigh(data test.Data, helpers test.Helpers) string {
+	helpers.T().Helper()
+
+	return generate(helpers, filepath.Join(data.Temp().Dir(), "noise-floor-high.flac"), []string{
+		"-f", "lavfi", "-i", "anoisesrc=d=" + defaultDuration + ":c=white:a=0.5",
+		"-af", "pan=stereo|c0=c0|c1=c0,volume=-6dB",
+		"-ar", "44100", "-sample_fmt", "s16",
+	})
+}
+
+// NoiseFloorClean returns path to audio with clean noise floor (band-limited pink noise).
+// Chained 4th-order lowpass at 8 kHz provides ~48 dB/octave rolloff, ensuring 14-18 kHz band
+// is far below the 1-10 kHz reference.
+func NoiseFloorClean(data test.Data, helpers test.Helpers) string {
+	helpers.T().Helper()
+
+	return generate(helpers, filepath.Join(data.Temp().Dir(), "noise-floor-clean.flac"), []string{
+		"-f", "lavfi", "-i", "anoisesrc=d=" + defaultDuration + ":c=pink:a=0.5",
+		"-af", "lowpass=f=8000,lowpass=f=8000,lowpass=f=8000,lowpass=f=8000,pan=stereo|c0=c0|c1=c0,volume=-6dB",
+		"-ar", "44100", "-sample_fmt", "s16",
+	})
+}
+
 // LowLoudnessQuiet returns path to very quiet audio (-30dB).
 func LowLoudnessQuiet(data test.Data, helpers test.Helpers) string {
 	helpers.T().Helper()

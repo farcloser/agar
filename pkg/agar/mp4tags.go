@@ -2,12 +2,104 @@ package agar
 
 import (
 	"path/filepath"
+	"strconv"
 
 	"github.com/containerd/nerdctl/mod/tigron/test"
 )
 
 // iTunesDomain is the reverse DNS domain for iTunes freeform tags.
 const iTunesDomain = "com.apple.iTunes"
+
+// MP4Tags holds metadata for MP4/M4A files.
+type MP4Tags struct {
+	Title       string
+	Artist      string
+	Album       string
+	AlbumArtist string
+	Year        int
+	Track       int
+	TrackTotal  int
+	Disc        int
+	DiscTotal   int
+	Genre       string
+	Comment     string
+	Composer    string
+}
+
+// DefaultMP4Tags returns the standard test metadata used across gill tests.
+func DefaultMP4Tags() MP4Tags {
+	return MP4Tags{
+		Title:       "Test Title",
+		Artist:      "Test Artist",
+		Album:       "Test Album",
+		AlbumArtist: "Test AlbumArtist",
+		Year:        testYear,
+		Track:       testTrack,
+		TrackTotal:  testTrackTotal,
+		Disc:        testDisc,
+		DiscTotal:   0,
+		Genre:       "Jazz",
+		Comment:     "Test Comment",
+		Composer:    "Test Composer",
+	}
+}
+
+// MP4SetAllTags sets all tags on an MP4 file using atomicparsley.
+func MP4SetAllTags(helpers test.Helpers, path string, tags MP4Tags) {
+	helpers.T().Helper()
+
+	if tags.Title != "" {
+		MP4SetTag(helpers, path, "title", tags.Title)
+	}
+
+	if tags.Artist != "" {
+		MP4SetTag(helpers, path, "artist", tags.Artist)
+	}
+
+	if tags.Album != "" {
+		MP4SetTag(helpers, path, "album", tags.Album)
+	}
+
+	if tags.AlbumArtist != "" {
+		MP4SetTag(helpers, path, "albumArtist", tags.AlbumArtist)
+	}
+
+	if tags.Year > 0 {
+		MP4SetTag(helpers, path, "year", strconv.Itoa(tags.Year))
+	}
+
+	if tags.Genre != "" {
+		MP4SetTag(helpers, path, "genre", tags.Genre)
+	}
+
+	if tags.Comment != "" {
+		MP4SetTag(helpers, path, "comment", tags.Comment)
+	}
+
+	if tags.Composer != "" {
+		MP4SetTag(helpers, path, "composer", tags.Composer)
+	}
+
+	// Track number (format: N/T or just N)
+	if tags.Track > 0 {
+		trackStr := strconv.Itoa(tags.Track)
+		if tags.TrackTotal > 0 {
+			trackStr += "/" + strconv.Itoa(tags.TrackTotal)
+		}
+
+		MP4SetTag(helpers, path, "tracknum", trackStr)
+	}
+
+	// Disc number (format: N/T or just N)
+	if tags.Disc > 0 {
+		discStr := strconv.Itoa(tags.Disc)
+		if tags.DiscTotal > 0 {
+			discStr += "/" + strconv.Itoa(tags.DiscTotal)
+		}
+
+		MP4SetTag(helpers, path, "disk", discStr)
+	}
+}
 
 // MP4SetTag sets a tag on an MP4 file using atomicparsley.
 // Standard tags use short names: title, artist, album, albumArtist, genre, year, etc.
@@ -71,12 +163,7 @@ func TaggedAAC(data test.Data, helpers test.Helpers) string {
 	helpers.T().Helper()
 
 	path := FormatAAC256k(data, helpers)
-
-	MP4SetTag(helpers, path, "title", "Test Title")
-	MP4SetTag(helpers, path, "artist", "Test Artist")
-	MP4SetTag(helpers, path, "album", "Test Album")
-	MP4SetTag(helpers, path, "year", "2024")
-	MP4SetTag(helpers, path, "tracknum", "1/10")
+	MP4SetAllTags(helpers, path, DefaultMP4Tags())
 
 	return path
 }
@@ -86,12 +173,7 @@ func TaggedALAC(data test.Data, helpers test.Helpers) string {
 	helpers.T().Helper()
 
 	path := FormatALAC(data, helpers)
-
-	MP4SetTag(helpers, path, "title", "Test Title")
-	MP4SetTag(helpers, path, "artist", "Test Artist")
-	MP4SetTag(helpers, path, "album", "Test Album")
-	MP4SetTag(helpers, path, "year", "2024")
-	MP4SetTag(helpers, path, "tracknum", "1/10")
+	MP4SetAllTags(helpers, path, DefaultMP4Tags())
 
 	return path
 }

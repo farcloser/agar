@@ -267,11 +267,6 @@ linters:
             - golang.org/x/sync/errgroup
             - github.com/containerd/nerdctl/mod/tigron
 
-    gomoddirectives:
-      # Allow replace for go-containerregistry (HTTPS patch for .local domains)
-      replace-allow-list:
-        - github.com/google/go-containerregistry
-
     staticcheck:
       checks:
         - all

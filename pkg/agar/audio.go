@@ -17,6 +17,12 @@ const (
 	id3v2Binary         = "id3v2"
 	vorbiscommentBinary = "vorbiscomment"
 	opustagsBinary      = "opustags"
+
+	// Test metadata constants for consistent test data across formats.
+	testYear       = 2000
+	testTrack      = 3
+	testTrackTotal = 6
+	testDisc       = 2
 )
 
 // Genuine16bit44k returns path to genuine 16-bit 44.1kHz stereo FLAC.

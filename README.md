@@ -1,4 +1,4 @@
-# Gill
+# Agar
 
 > * a golang testing framework that generates test audio files and ease testing of audio cli tools
 > * [a colloidal extract of algae; used especially in culture media](https://en.wikipedia.org/wiki/Agar)

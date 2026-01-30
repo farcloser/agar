@@ -262,7 +262,7 @@ linters:
             - $all
           allow:
             - $gostd
-            - github.com/farcloser/hypha
+            - github.com/mycophonic/hypha
             - github.com/urfave/cli/v3
             - golang.org/x/sync/errgroup
             - github.com/containerd/nerdctl/mod/tigron

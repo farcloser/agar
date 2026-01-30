@@ -1,4 +1,4 @@
-module github.com/farcloser/agar
+module github.com/mycophonic/agar
 
 go 1.25.6
 
